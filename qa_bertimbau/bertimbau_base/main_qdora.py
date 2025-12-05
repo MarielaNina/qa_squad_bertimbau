@@ -19,10 +19,12 @@ def run():
 
     # ------------ DATASET ------------
     train_file = './data/flat_squad-train-v1.1.json' \
-        if Path('./data/flat_squad-train-v1.1.json').exists() else flatten_data('./data/squad-train-v1.1.json')
+        if Path('./data/flat_squad-train-v1.1.json').exists() \
+        else flatten_data('./data/squad-train-v1.1.json')
 
     validation_file = './data/flat_squad-dev-v1.1.json' \
-        if Path('./data/flat_squad-dev-v1.1.json').exists() else flatten_data('./data/squad-dev-v1.1.json')
+        if Path('./data/flat_squad-dev-v1.1.json').exists() \
+        else flatten_data('./data/squad-dev-v1.1.json')
 
     qa_dataset = load_dataset(
         'json',
@@ -30,6 +32,7 @@ def run():
         field='data'
     )
 
+    # ------------ MODELO ------------
     model_type = "base"
     model_name = f"neuralmind/bert-{model_type}-portuguese-cased"
 
@@ -42,7 +45,7 @@ def run():
         remove_columns=qa_dataset["train"].column_names
     )
 
-    # ------------ 4 BIT ------------
+    # ------------ CONFIG 4-BITS (NF4) ------------
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_use_double_quant=True,
@@ -56,12 +59,11 @@ def run():
         device_map="auto"
     )
 
-    # ------------ QDORA CONFIG ------------
+    # ------------ QDORA CONFIG (query + value con DORA) ------------
     lora_config = LoraConfig(
         task_type=TaskType.QUESTION_ANS,
-        #task_type=TaskType.FEATURE_EXTRACTION,
-        r=8,
-        lora_alpha=16,
+        r=16,
+        lora_alpha=32,
         lora_dropout=0.1,
         bias="none",
         use_dora=True,
@@ -71,7 +73,7 @@ def run():
     model = get_peft_model(model, lora_config)
     model.print_trainable_parameters()
 
-    # ------------ METRICAS ------------
+    # ------------ MÉTRICAS ------------
     metric = evaluate.load("squad")
 
     def compute_metrics(p):
@@ -91,7 +93,7 @@ def run():
 
         return metric.compute(predictions=formatted_predictions, references=references)
 
-    # ------------ TRAIN ------------
+    # ------------ TRAINING ARGS (igual que QLoRA) ------------
     training_args = TrainingArguments(
         output_dir="./results/qdora_bertimbau_qa",
         num_train_epochs=2,
@@ -102,11 +104,13 @@ def run():
         eval_strategy="epoch",
         save_strategy="epoch",
         logging_steps=50,
-        fp16=True,
+        fp16=False,
+        bf16=False,
         load_best_model_at_end=True,
         metric_for_best_model="f1"
     )
 
+    # ------------ TRAINER ------------
     trainer = Trainer(
         model=model,
         args=training_args,
