@@ -13,14 +13,14 @@
 
 This repository contains the code and experiments for the paper:
 
-**"Efficient Fine-Tuning Methods for Portuguese Question Answering: Evaluating LoRA, QLoRA, DoRA and QDoRA on BERTimbau with SQuAD"**
+**"Efficient Fine-Tuning for Portuguese Question Answering: A Systematic Evaluation of LoRA, QLoRA, DoRA and QDoRA on BERTimbau"**
 
 **Key Findings:**
-- LoRA achieves **95.8%** of full fine-tuning performance with **73.5%** reduction in training time
-- QLoRA enables training BERTimbau-Large on **8GB GPUs** (validated on RTX 2080 Ti)
-- Learning rate **2e-4** is critical for PEFT methods (+6.2 F1 points improvement)
-- Larger models are more resilient to quantization (4.83 vs 9.56 F1 loss)
-- First quantization study applied to BERTimbau models
+* LoRA achieves **95.8%** of full fine-tuning performance with **73.5%** reduction in training time
+* QLoRA enables fine-tuning BERTimbau-Large under severe memory constraints (≈8–20 GB VRAM), making large models feasible on commodity GPUs where full fine-tuning is impractical.
+* Learning rate **2e-4** is critical for PEFT methods (+6.2 F1 points improvement)
+* Larger models are more resilient to quantization (4.83 vs 9.56 F1 loss)
+* First quantization study applied to BERTimbau models
 
 **Paper and Figures:** See ([paper/](https://github.com/MarielaNina/Projeto_Final_Redes_Neurais/blob/main/Paper_Mariela_Nina.pdf)) directory for the full paper, figures, and supplementary materials.
 
@@ -29,15 +29,15 @@ This repository contains the code and experiments for the paper:
 This project explores **Parameter-Efficient Fine-Tuning (PEFT)** techniques for Portuguese Question Answering using BERTimbau models on the SQuAD v1 dataset translated to Brazilian Portuguese.
 
 ### Methods Evaluated
-- **LoRA** (Low-Rank Adaptation)
-- **QLoRA** (Quantized LoRA with 4-bit NF4)
-- **DoRA** (Weight-Decomposed LoRA)
-- **QDoRA** (Quantized DoRA)
-- **Full Fine-Tuning** (baseline)
+* **LoRA** (Low-Rank Adaptation)
+* **QLoRA** (Quantized LoRA with 4-bit NF4)
+* **DoRA** (Weight-Decomposed LoRA)
+* **QDoRA** (Quantized DoRA)
+* **Full Fine-Tuning** (baseline)
 
 ### Models
-- **BERTimbau-Base** (110M parameters)
-- **BERTimbau-Large** (335M parameters)
+* **BERTimbau-Base** (110M parameters)
+* **BERTimbau-Large** (335M parameters)
 
 ##  Main Results
 
@@ -88,11 +88,11 @@ pip install -r requirements.txt
 ```
 
 **Key dependencies:**
-- `transformers==4.36.0`
-- `peft==0.7.1`
-- `bitsandbytes==0.41.0` (for quantization)
-- `torch==2.1.0`
-- `accelerate`
+* `transformers==4.36.0`
+* `peft==0.7.1`
+* `bitsandbytes==0.41.0` (for quantization)
+* `torch==2.1.0`
+* `accelerate`
 
 ### 3. Run Training
 
@@ -102,7 +102,7 @@ cd bertimbau_large
 python main_lora.py --learning_rate 2e-4 --num_epochs 2
 ```
 
-**QLoRA (for 8GB GPUs):**
+**QLoRA (for 8-20GB GPUs):**
 ```bash
 python main_qlora.py --learning_rate 2e-4 --num_epochs 2
 ```
@@ -118,30 +118,29 @@ python main.py --learning_rate 4.25e-5 --num_epochs 2
 ### Optimal Hyperparameters
 
 **For PEFT methods (LoRA, QLoRA, DoRA, QDoRA):**
-- Learning rate: `2e-4` **Critical!**
-- Epochs: `2`
-- LoRA rank: `16`
-- LoRA alpha: `32`
-- Batch size: `8` (Large) / `16` (Base)
+* Learning rate: `2e-4` **Critical!**
+* Epochs: `2`
+* LoRA rank: `16`
+* LoRA alpha: `32`
+* Batch size: `8` (Large) / `16` (Base)
 
 **For Full Fine-Tuning:**
-- Learning rate: `4.25e-5`
-- Epochs: `2`
-- Batch size: `8` (Large) / `16` (Base)
+* Learning rate: `4.25e-5`
+* Epochs: `2`
+* Batch size: `8` (Large) / `16` (Base)
 
 ** Important:** PEFT methods require higher learning rates (2e-4) to achieve optimal performance. Using standard BERT learning rates (4.25e-5) results in severe performance degradation.
 
 ### Hardware Requirements
 
 **Tested on:**
-- **Primary GPU:** NVIDIA RTX A4500 (20GB VRAM)
-- **Secondary GPU:** NVIDIA RTX 2080 Ti (8GB VRAM) - for QLoRA validation
-- CUDA 12.2
+* **GPU:** NVIDIA RTX A4500 (20GB VRAM)
+* CUDA 12.2
 
 **Recommended:**
-- **8GB VRAM:** QLoRA with Large 
-- **16-20GB VRAM:** LoRA with Large 
-- **<8GB VRAM:** LoRA with Base 
+* **>8GB VRAM:** QLoRA with Large 
+* **16-20GB VRAM:** LoRA with Large 
+* **<8GB VRAM:** LoRA with Base 
 
 ##  Visualizations
 
@@ -156,29 +155,6 @@ The paper includes detailed visualizations:
    - 4 panels: 2 LRs × 2 epochs
    - Direct visual comparison of all methods
 
-##  Citation
-
-If you use this code or findings in your research, please cite:
-
-```bibtex
-@inproceedings{nina2025peft,
-  title={Efficient Fine-Tuning Methods for Portuguese Question Answering: 
-         Evaluating LoRA, QLoRA, DoRA and QDoRA on BERTimbau with SQuAD},
-  author={Nina, Mariela M.},
-  year={2025},
-  organization={Universidade Federal de São Paulo}
-}
-```
-
-##  Key References
-
-- **BERTimbau:** Souza et al., BRACIS 2020
-- **LoRA:** Hu et al., ICLR 2022
-- **QLoRA:** Dettmers et al., NeurIPS 2023
-- **DoRA:** Liu et al., ICML 2024
-- **SQuAD:** Rajpurkar et al., EMNLP 2016
-
-Full bibliography available in [`paper/references_expanded.bib`](paper/references_expanded.bib)
 
 ##  Practical Recommendations
 
@@ -197,8 +173,8 @@ python main_lora.py --learning_rate 2e-4 --num_epochs 2
 ```
 
 ### For Models <200M parameters:
-- Avoid quantization (higher degradation in smaller models)
-- Use LoRA without quantization
+* Avoid quantization (higher degradation in smaller models)
+* Use LoRA without quantization
 
 ##  Troubleshooting
 
@@ -227,10 +203,10 @@ pip install bitsandbytes==0.41.0
 ## Reproducibility
 
 All experiments are fully reproducible with provided scripts. Key details:
-- Random seeds fixed
-- Complete hyperparameter specifications
-- Hardware requirements documented
-- Software versions pinned in `requirements.txt`
+* Random seeds fixed
+* Complete hyperparameter specifications
+* Hardware requirements documented
+* Software versions pinned in `requirements.txt`
 
 ## Contributing
 
@@ -241,35 +217,25 @@ Contributions are welcome! Please:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## Notes
-
-- Heavy artifacts (models, checkpoints) are excluded via `.gitignore`
-- To share trained models, use [Hugging Face Hub](https://huggingface.co/)
-- Results and logs are saved in `results/` directory
-- All figures are publication-quality PDFs (300 DPI)
 
 ## Contact
 
 **Mariela M. Nina**
-- 🏛️ Universidade Federal de São Paulo (UNIFESP)
-- 📧 mariela.nina@unifesp.br
-- 🐙 GitHub: [@MarielaNina](https://github.com/MarielaNina)
+* 🏛️ Universidade Federal de São Paulo (UNIFESP)
+* 📧 mariela.nina@unifesp.br
 
 ##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
-
-**If you find this work useful, please star the repository!** 
 
 ##  Related Resources
 
-- [BERTimbau Models](https://huggingface.co/neuralmind)
-- [PEFT Library](https://github.com/huggingface/peft)
-- [SQuAD Dataset](https://rajpurkar.github.io/SQuAD-explorer/)
-- [Transformers Documentation](https://huggingface.co/docs/transformers/)
+* [BERTimbau Models](https://huggingface.co/neuralmind)
+* [PEFT Library](https://github.com/huggingface/peft)
+* [SQuAD Dataset](https://rajpurkar.github.io/SQuAD-explorer/)
+* [Transformers Documentation](https://huggingface.co/docs/transformers/)
 
----
+
 
 **Last Updated:** December 2025
