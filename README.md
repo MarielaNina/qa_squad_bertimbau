@@ -1,17 +1,20 @@
-# qa_squad_bertimbau
+# Projeto_Final_Redes_Neurais
 
 Proyecto para entrenamiento y evaluación de modelos BERT en tareas de Question Answering (SQuAD) en portugués.
 
 
+
 Descripción
-- Contiene código para entrenar variantes base y large de modelos BERT adaptados a portugués (Bertimbau), con configuraciones para LoRA/QLoRA.
-- Incluye scripts de preprocesamiento, postprocesamiento, y varios `main_*.py` para distintos flujos de entrenamiento y predicción.
-- Se realizan múltiples experimentos de cuantización (QLoRA, LoRA, etc.) tanto en Bertimbau base como large, probando diferentes valores de learning rate (`lr`). Esto permite comparar el impacto de la cuantización y el ajuste de hiperparámetros en el rendimiento y eficiencia del modelo.
+- Este proyecto contiene experimentos de redes neuronales aplicados a la tarea de Question Answering en portugués usando modelos BERTimbau (base y large).
+- Se exploran técnicas de ajuste eficiente de parámetros como LoRA y QLoRA, así como cuantización y pruebas con diferentes learning rates.
+- Incluye scripts para preprocesamiento, postprocesamiento, entrenamiento y evaluación, permitiendo comparar el impacto de la cuantización y el ajuste de hiperparámetros en el rendimiento y eficiencia de los modelos.
+
 
 Estructura principal
-- `qa_bertimbau/` : subproyecto con implementaciones para `bertimbau_base`, `bertimbau_large` y `tucano_base`.
-  - `bertimbau_base/` y `bertimbau_large/`: scripts para entrenamiento (`main.py`, `main_qlora.py`, `main_lora.py`, etc.), junto con `data/` y `results/`.
-- `data/`: ubicación esperada para archivos JSON de entrenamiento/validación (si no están, los scripts intentan generar archivos "flattened").
+- `qa_bertimbau/`: subproyecto con implementaciones para:
+	- `bertimbau_base/` y `bertimbau_large/`: scripts para entrenamiento y evaluación (`main.py`, `main_qlora.py`, `main_lora.py`, etc.), junto con carpetas `data/` y `results/`.
+	- `tucano_base/`: scripts y datos para experimentos adicionales.
+- `data/`: ubicación esperada para archivos JSON de entrenamiento/validación.
 
 Cómo empezar (rápido)
 1. Crear y activar un entorno virtual (recomendado con conda):
@@ -34,17 +37,21 @@ Cómo empezar (rápido)
 	python main_qlora.py
 	```
 
+
 Notas importantes
-- No se suben artefactos pesados (modelos, checkpoints) gracias a `.gitignore`. Evita commitear archivos grandes como `*.pt`, `*.safetensors`, `runs/`, `results/`.
-- Si quieres subir un modelo o checkpoint, considera usar un servicio de almacenamiento (Hugging Face Hub, Google Drive, S3) en vez del repositorio Git.
-- Hay una conversión reciente del subproyecto `qa_bertimbau` a carpeta normal dentro del repo principal. El historial independiente de ese subproyecto NO se preservó en este repositorio; si necesitas el historial, lo podemos reconstituir en un repo separado.
+- Los artefactos pesados (modelos, checkpoints) están excluidos por `.gitignore`. Evita subir archivos grandes como `*.pt`, `*.safetensors`, `runs/`, `results/`.
+- Para compartir modelos entrenados, usa servicios externos como Hugging Face Hub, Google Drive o S3.
+- El subproyecto `qa_bertimbau` fue convertido a carpeta normal dentro del repo principal.
+
 
 Contribuir
-- Abre un issue o pull request en GitHub.
-- Antes de commitear, ejecuta linters y pruebas (si las añades).
+- Puedes abrir issues o pull requests en GitHub para sugerencias o mejoras.
+- Antes de commitear, ejecuta linters y pruebas si están disponibles.
+
 
 Contacto
 - Maintainer: `MarielaNina` (https://github.com/MarielaNina)
 
+
 Licencia
-- Añade una licencia si lo deseas (p. ej. MIT). Puedo añadir un `LICENSE` por ti si me indicas cuál prefieres.
+- Puedes añadir una licencia (MIT, Apache, etc.) si lo deseas. Solicítala y la agrego por ti.
