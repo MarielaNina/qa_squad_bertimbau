@@ -8,8 +8,6 @@ run code: python main.py
 python -c "import torch; torch.cuda.empty_cache()"
 nvidia-smi
 
-print("hola mariela")
-
 # conda create -n bertimbau python=3.11
 # conda activate bertimbau
 #pip install requeriments.txt
